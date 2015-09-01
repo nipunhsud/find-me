@@ -12,6 +12,27 @@ class UrlMappings {
 		
 		"/question"(resource:'question')
 		
+		"/question/get-all"{
+			controller =  "question"
+			action = "getQuestions"
+			parseRequest= true
+			method = "GET"
+		}
+		
+		"/question/$id"{
+			controller =  "question"
+			action = "getQuestion"
+			parseRequest= true
+			method = "GET"
+		}
+		
+		"/question/location/$id"{
+			controller =  "question"
+			action = "getQuestionByLocation"
+			parseRequest= true
+			method = "GET"
+		}
+		
 		"/answer"(resource:'answer')
 		
 		"/question/query"{
