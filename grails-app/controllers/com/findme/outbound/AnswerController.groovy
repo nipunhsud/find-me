@@ -15,7 +15,7 @@ class AnswerController {
 			answer.setDeviceId(json.deviceId)
 			answer.setLatitude(json.latitude)
 			answer.setLongitude(json.logitude)
-			answer.save(fail: true)
+			answer.save(flush: true,failOnError: true)
 			log.info "Answer with ${answer.id} created for ${json.questionId}"
 			render(status: 200, text: answer.id as JSON, contextType: "application/json")
 		}else{

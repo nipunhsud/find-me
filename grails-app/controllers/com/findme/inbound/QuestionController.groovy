@@ -5,6 +5,9 @@ import grails.converters.deep.JSON
 import groovy.json.JsonOutput
 
 class QuestionController {
+	
+	def locationService
+	
 	static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 	def scaffold = Question
     def index() { }
@@ -40,7 +43,23 @@ class QuestionController {
 
 		question.save(flush: true,failOnError: true)
 		log.info "Question id "+ question.id
+		//getSpatialLocation()
+		getUsersInProximity( question.id)
 		render(status: 200, text: "Success", contextType: "application/json")
+	}
+	
+	def GetUsersInProximity(questionId, spatialLocation){
+		/*String indexPath = "/home/vishnu/lucene_practices/geo_spatial_index";
+		
+		SpatialSearch s = new SpatialSearch(indexPath);
+		
+		//Indexes sample documents
+		s.indexDocuments();
+		s.setSearchIndexPath(indexPath);
+		
+		//Get Places Within 4 kilometers from cubbon park.
+		s.search(12.974045,77.591995, 4);*/
+		locationService.findUsersInProximity(spatialLocation)
 	}
 	
 	/*def sendQuery(){
