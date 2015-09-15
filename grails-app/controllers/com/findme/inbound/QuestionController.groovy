@@ -4,6 +4,8 @@ package com.findme.inbound
 import grails.converters.deep.JSON
 import groovy.json.JsonOutput
 
+import org.apache.lucene.spatial.*
+
 class QuestionController {
 	
 	def locationService
@@ -44,22 +46,13 @@ class QuestionController {
 		question.save(flush: true,failOnError: true)
 		log.info "Question id "+ question.id
 		//getSpatialLocation()
-		getUsersInProximity( question.id)
+		getUsersInProximity()
 		render(status: 200, text: "Success", contextType: "application/json")
 	}
-	
-	def GetUsersInProximity(questionId, spatialLocation){
-		/*String indexPath = "/home/vishnu/lucene_practices/geo_spatial_index";
-		
-		SpatialSearch s = new SpatialSearch(indexPath);
-		
-		//Indexes sample documents
-		s.indexDocuments();
-		s.setSearchIndexPath(indexPath);
-		
-		//Get Places Within 4 kilometers from cubbon park.
-		s.search(12.974045,77.591995, 4);*/
-		locationService.findUsersInProximity(spatialLocation)
+	//questionId, spatialLocation
+	def getUsersInProximity(){
+		locationService.searchMe()
+		//locationService.findUsersInProximity(spatialLocation)
 	}
 	
 	/*def sendQuery(){

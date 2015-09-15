@@ -44,11 +44,20 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
+		
     }
 
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
         test "org.grails:grails-datastore-test-support:1.0.2-grails-2.4"
+		compile ('org.apache.lucene:lucene-core:5.3.0') 
+		compile ('org.apache.lucene:lucene-analyzers-common:5.3.0')
+		compile ('org.apache.lucene:lucene-facet:5.3.0')
+		compile ('org.apache.lucene:lucene-queries:5.3.0')
+		compile ('org.apache.lucene:lucene-spatial:5.3.0')
+		compile ('org.apache.solr:solr-core:5.3.0')
+		compile ('org.apache.lucene:lucene-codecs:5.3.0')
+		compile ('org.apache.solr:solr-solrj:5.3.0')
     }
 
     plugins {
@@ -62,5 +71,8 @@ grails.project.dependency.resolution = {
         runtime ":jquery:1.11.1"
 		compile ":runtime-logging:0.4"
 		compile ':mongodb:3.0.3'
+		
+		
+		
     }
 }
