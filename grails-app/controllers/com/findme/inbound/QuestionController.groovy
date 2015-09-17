@@ -7,9 +7,6 @@ import groovy.json.JsonOutput
 import org.apache.lucene.spatial.*
 
 class QuestionController {
-	
-	def locationService
-	
 	static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 	def scaffold = Question
     def index() { }
@@ -45,6 +42,7 @@ class QuestionController {
 
 		question.save(flush: true,failOnError: true)
 		log.info "Question id "+ question.id
+<<<<<<< HEAD
 		//getSpatialLocation()
 		getUsersInProximity()
 		render(status: 200, text: "Success", contextType: "application/json")
@@ -54,6 +52,10 @@ class QuestionController {
 		locationService.searchMe()
 		//locationService.findUsersInProximity(spatialLocation)
 	}
+=======
+		render(status: 200, text: "Success", contextType: "application/json")
+	}
+>>>>>>> parent of e0d640f... updates to q contlr,
 	
 	/*def sendQuery(){
 		log.info "Params "+ params
