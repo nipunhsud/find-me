@@ -43,6 +43,7 @@ class QuestionController {
 		question.save(flush: true,failOnError: true)
 		log.info "Question id "+ question.id
 <<<<<<< HEAD
+<<<<<<< HEAD
 		//getSpatialLocation()
 		getUsersInProximity()
 		render(status: 200, text: "Success", contextType: "application/json")
@@ -52,6 +53,10 @@ class QuestionController {
 		locationService.searchMe()
 		//locationService.findUsersInProximity(spatialLocation)
 	}
+=======
+		render(status: 200, text: "Success", contextType: "application/json")
+	}
+>>>>>>> parent of e0d640f... updates to q contlr,
 =======
 		render(status: 200, text: "Success", contextType: "application/json")
 	}
