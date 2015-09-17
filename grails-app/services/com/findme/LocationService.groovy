@@ -1,5 +1,8 @@
 package com.findme
 
+import java.nio.file.Path
+import java.nio.file.Paths
+
 import org.apache.lucene.analysis.*
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.Document
@@ -28,7 +31,6 @@ import org.apache.lucene.spatial.query.SpatialArgs
 import org.apache.lucene.spatial.query.SpatialOperation
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.SimpleFSDirectory
-import org.apache.lucene.util.Version
 
 import com.spatial4j.core.context.SpatialContext
 import com.spatial4j.core.distance.DistanceUtils
@@ -46,9 +48,10 @@ class LocationService {
 	
 	def searchMe(){
 		
-		String indexPath = "/home/nipunsud/lucene_practices/geo_spatial_index";
+		String indexPath = "/Users/nipunsud/Documents/lucene_practices/geo_spatial_index";
 		log.info "Index path "+ indexPath
 		
+		SpatialSearch(indexPath)
 		//Indexes sample documents
 		indexDocuments();
 		setSearchIndexPath(indexPath);
@@ -59,12 +62,15 @@ class LocationService {
 	
 	public SpatialSearch(String indexPath) {
 	 
-	 Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_43);
-	 IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_43, a);
+	 StandardAnalyzer analyzer = new StandardAnalyzer();
+	 IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 	 Directory directory;
 	 
 	 try {
-	  directory = new SimpleFSDirectory(new File(indexPath));
+		 Path path = Paths.get(indexPath)
+		 log.info "PAth clas "+ path.getClass().name
+	  directory = new SimpleFSDirectory(path);
+	  log.info "Directory "+ directory
 	  indexWriter = new IndexWriter(directory, iwc);
 	 } catch (IOException e) {
 	  // TODO Auto-generated catch block
@@ -95,7 +101,7 @@ class LocationService {
 	private Document newGeoDocument(int id, String name, Shape shape) {
    
 	 FieldType ft = new FieldType();
-	 ft.setIndexed(true);
+	// ft.setIndexed(true);
 	 ft.setStored(true);
    
 	 Document doc = new Document();
@@ -112,7 +118,8 @@ class LocationService {
 	}
 	
 	public void setSearchIndexPath(String indexPath) throws IOException{
-	 this.indexReader = DirectoryReader.open(new SimpleFSDirectory(new File(indexPath)));
+	Path path = Paths.get(indexPath)
+	 this.indexReader = DirectoryReader.open(new SimpleFSDirectory(path));
 	 this.searcher = new IndexSearcher(indexReader);
 	}
 	
@@ -142,7 +149,5 @@ class LocationService {
 	 }
 	 
 	}
-    def serviceMethod() {
-
-    }
+    
 }
