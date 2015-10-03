@@ -9,6 +9,7 @@ import org.apache.lucene.spatial.*
 class QuestionController {
 	
 	def locationService
+	def encryptionService
 	
 	static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 	def scaffold = Question
@@ -44,14 +45,23 @@ class QuestionController {
 		question.setTimeStamp(request.JSON.findme.timeStamp)
 
 		question.save(flush: true,failOnError: true)
-		log.info "Question id "+ question.id
+		
+		
 		//getSpatialLocation()
-		getUsersInProximity()
 		render(status: 200, text: "Success", contextType: "application/json")
+		if(question.id){
+			getUsersInProximity(request.JSON.findme.longitude,request.JSON.findme.longitude,15)
+		}else{
+		log.error "Question not found/saved"
+		}
+		
+		
 	}
 	//questionId, spatialLocation
-	def getUsersInProximity(){
-		locationService.searchMe()
+	def getUsersInProximity(lat, lng, dist){
+		log.info "Render proximity"
+		//Move this to OUt
+		locationService.getUsersAround(lat, lng, dist)
 		//locationService.findUsersInProximity(spatialLocation)
 	}
 	

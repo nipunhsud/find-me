@@ -58,7 +58,7 @@ grails.project.dependency.resolution = {
 		compile ('org.apache.solr:solr-core:5.3.0')
 		compile ('org.apache.lucene:lucene-codecs:5.3.0')
 		compile ('org.apache.solr:solr-solrj:5.3.0')
-    }
+		
 
     plugins {
         // plugins for the build system only
@@ -71,6 +71,7 @@ grails.project.dependency.resolution = {
         runtime ":jquery:1.11.1"
 		compile ":runtime-logging:0.4"
 		compile ':mongodb:3.0.3'
+	}
 		
 		
 		

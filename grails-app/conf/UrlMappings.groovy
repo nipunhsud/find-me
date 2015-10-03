@@ -10,6 +10,8 @@ class UrlMappings {
         "/"(view:"/index")
         "500"(view:'/error')
 		
+		"/user"(resource:'user')
+		
 		"/question"(resource:'question')
 		
 		"/question/get-all"{
@@ -52,6 +54,12 @@ class UrlMappings {
 			action = "getAnswerWithQuestionId"
 			parseRequest= true
 			method = "GET"
+		}
+		
+		"/user/"{
+			controller = "user"
+			action = "createIndex"
+			method = "POST"
 		}
 		
 		

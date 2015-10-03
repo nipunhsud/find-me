@@ -1,7 +1,7 @@
 package com.findme.outbound
 
 import grails.converters.JSON
-
+import com.findme.outbound.Answer
 class AnswerController {
 
     def index() { }

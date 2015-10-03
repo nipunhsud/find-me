@@ -32,6 +32,7 @@ import org.apache.lucene.spatial.query.SpatialOperation
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.SimpleFSDirectory
 
+import com.findme.inbound.Question;
 import com.spatial4j.core.context.SpatialContext
 import com.spatial4j.core.distance.DistanceUtils
 import com.spatial4j.core.shape.Point
@@ -46,18 +47,18 @@ class LocationService {
 	private SpatialContext ctx;
 	private SpatialStrategy strategy;
 	
-	def searchMe(){
+	def getUsersAround(lat, lng,dist){
 		
 		String indexPath = "/Users/nipunsud/Documents/lucene_practices/geo_spatial_index";
 		log.info "Index path "+ indexPath
 		
 		SpatialSearch(indexPath)
 		//Indexes sample documents
-		indexDocuments();
+		//indexDocuments();
 		setSearchIndexPath(indexPath);
 		
 		//Get Places Within 4 kilometers from cubbon park.
-		search(12.974045,77.591995, 4);
+		search(12.9558,77.791995,10);
 	}
 	
 	public SpatialSearch(String indexPath) {
@@ -85,13 +86,22 @@ class LocationService {
 	}
 	
 	public void indexDocuments() throws IOException {
+		
+		def users = User.findAll()
+		users.each{
+			indexWriter.addDocument(newGeoDocument(it.userId, it.username, ctx.makePoint(it.currentLatitude, it.currentLongitude)));
+		}
+	
+		
 	 
-	 indexWriter.addDocument(newGeoDocument(1, "Bangalore", ctx.makePoint(12.9558, 77.620979)));
+	 
+	 /*indexWriter.addDocument(newGeoDocument(1, "Bangalore", ctx.makePoint(12.9558, 77.620979)));
 	 indexWriter.addDocument(newGeoDocument(2, "Cubbon Park", ctx.makePoint(12.974045, 77.591995)));
 	 indexWriter.addDocument(newGeoDocument(3, "Tipu palace", ctx.makePoint(12.959365, 77.573792)));
 	 indexWriter.addDocument(newGeoDocument(4, "Bangalore palace", ctx.makePoint(12.998095, 77.592041)));
 	 indexWriter.addDocument(newGeoDocument(5, "Monkey Bar", ctx.makePoint(12.97018, 77.61219)));
 	 indexWriter.addDocument(newGeoDocument(6, "Cafe Cofee day", ctx.makePoint(12.992189, 80.2348618)));
+	 indexWriter.addDocument(newGeoDocument(7, "Test", ctx.makePoint(12.9558, 77.902995)));*/
 	 
 	 indexWriter.commit();
 	 indexWriter.close();
@@ -106,8 +116,8 @@ class LocationService {
    
 	 Document doc = new Document();
 	 
-	 doc.add(new IntField("id", id, Store.YES));
-	 doc.add(new Field("name", name, ft));
+	 doc.add(new IntField("userId", id, Store.YES));
+	 doc.add(new Field("userName", name, ft));
 	 for(IndexableField f:strategy.createIndexableFields(shape)) {
 	  doc.add(f);
 	 }
@@ -127,13 +137,13 @@ class LocationService {
 	 
 	 Point p = ctx.makePoint(lat, lng);
 	 SpatialArgs args = new SpatialArgs(SpatialOperation.Intersects,
-	   ctx.makeCircle(lat, lng, DistanceUtils.dist2Degrees(distance, DistanceUtils.EARTH_MEAN_RADIUS_KM)));
+	   ctx.makeCircle(lat, lng, DistanceUtils.dist2Degrees(distance, DistanceUtils.EARTH_EQUATORIAL_RADIUS_MI)));
 	 Filter filter = strategy.makeFilter(args);
 	 
 	 ValueSource valueSource = strategy.makeDistanceValueSource(p);
 	 Sort distSort = new Sort(valueSource.getSortField(false)).rewrite(searcher);
 	 
-	 int limit = 10;
+	 int limit = 30;
 	 TopDocs topDocs = searcher.search(new MatchAllDocsQuery(), filter, limit, distSort);
 	 ScoreDoc[] scoreDocs = topDocs.scoreDocs;
 	 
@@ -142,9 +152,9 @@ class LocationService {
 	  Document doc = searcher.doc(s.doc);
 	  Point docPoint = (Point) ctx.readShape(doc.get(strategy.getFieldName()));
 	  double docDistDEG = ctx.getDistCalc().distance(args.getShape().getCenter(), docPoint);
-	  double docDistInKM = DistanceUtils.degrees2Dist(docDistDEG, DistanceUtils.EARTH_EQUATORIAL_RADIUS_KM);
-	  System.out.println(doc.get("id") + "\t" + doc.get("name") + "\t" + docDistInKM + " km ");
-	  log.info "Searched "+ doc.get("id") + "\t" + doc.get("name") + "\t" + docDistInKM + " km "
+	  double docDistInKM = DistanceUtils.degrees2Dist(docDistDEG, DistanceUtils.EARTH_EQUATORIAL_RADIUS_MI);
+	  //System.out.println(doc.get("id") + "\t" + doc.get("name") + "\t" + docDistInKM + " km ");
+	  log.info "Searched "+ doc.get("id") + "\t" + doc.get("name") + "\t" + docDistInKM + " mi "
 	  
 	 }
 	 
